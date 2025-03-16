@@ -7,7 +7,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Override;
 
-abstract class BaseIntegrationTest extends TestCase
+abstract class BaseIntegrationTestCase extends TestCase
 {
     use WithWorkbench;
 
