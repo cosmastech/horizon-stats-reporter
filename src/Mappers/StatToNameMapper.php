@@ -20,13 +20,13 @@ class StatToNameMapper
      */
     public function mapStatEnumToString(StatEnum $statEnum): string
     {
-        foreach ($this->config->get('horizon-stats-reporter.stat_names', []) as $key => $value) {
-            if ($value === $statEnum) {
-                return (string) value($key, $statEnum);
-            }
+        $configuredValue = $this->config->get('horizon-stats-reporter.stat_names.'.$statEnum->value);
+
+        if ($configuredValue === null) {
+            throw InvalidConfigurationException::forStats([$statEnum]);
         }
 
-        throw InvalidConfigurationException::forStats([$statEnum]);
+        return (string) value($configuredValue);
     }
 
     public function forProcessesPerQueue(string $queueName): string
