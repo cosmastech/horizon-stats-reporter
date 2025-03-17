@@ -2,9 +2,8 @@
 
 namespace Cosmastech\HorizonStatsReporter\Actions;
 
-use Cosmastech\HorizonStatsReporter\StatEnum;
+use Cosmastech\HorizonStatsReporter\Mappers\StatToNameMapper;
 use Cosmastech\StatsDClientAdapter\Adapters\StatsDClientAdapter;
-use Illuminate\Support\Collection;
 use Laravel\Horizon\Contracts\WorkloadRepository;
 
 /**
@@ -16,27 +15,23 @@ class RecordHorizonWorkloadSnapshot
     public function __construct(
         protected WorkloadRepository $workloadRepository,
         protected StatsDClientAdapter $statsClient,
+        protected StatToNameMapper $statToNameMapper,
     ) {
     }
 
     public function handle(): void
     {
-        /** @see \Laravel\Horizon\Http\Controllers\WorkloadController */
         $workloads = $this->gatherWorkloads();
 
         array_map($this->recordWorkload(...), $workloads);
     }
 
     /**
-     * @return list<WorkloadType>
+     * @return array<int, WorkloadType>
      */
     protected function gatherWorkloads(): array
     {
-        // @phpstan-ignore-next-line
-        return (new Collection($this->workloadRepository->get()))
-            ->sortBy('name')
-            ->values()
-            ->toArray();
+        return $this->workloadRepository->get();
     }
 
     /**
@@ -48,17 +43,17 @@ class RecordHorizonWorkloadSnapshot
         $queueName = $workload['name'];
 
         $this->statsClient->gauge(
-            StatEnum::processesForQueue($queueName),
+            $this->statToNameMapper->forProcessesPerQueue($queueName),
             floatval($workload['processes'])
         );
 
         $this->statsClient->gauge(
-            StatEnum::waitForQueue($queueName),
+            $this->statToNameMapper->forWaitForQueue($queueName),
             floatval($workload['wait'])
         );
 
         $this->statsClient->gauge(
-            StatEnum::jobsForQueue($queueName),
+            $this->statToNameMapper->forJobsForQueue($queueName),
             floatval($workload['length'])
         );
     }
