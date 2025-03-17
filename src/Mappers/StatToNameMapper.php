@@ -4,16 +4,12 @@ namespace Cosmastech\HorizonStatsReporter\Mappers;
 
 use Cosmastech\HorizonStatsReporter\Exceptions\InvalidConfigurationException;
 use Cosmastech\HorizonStatsReporter\StatEnum;
-use Illuminate\Container\Attributes\Config;
+use Illuminate\Config\Repository;
 
 class StatToNameMapper
 {
-    /**
-     * @param  array<string, StatEnum|\Closure>  $statToEnum
-     */
     public function __construct(
-        #[Config('horizon-stats-reporter.stat_names')]
-        protected array $statToEnum
+        protected Repository $config
     ) {
     }
 
@@ -24,7 +20,7 @@ class StatToNameMapper
      */
     public function mapStatEnumToString(StatEnum $statEnum): string
     {
-        foreach ($this->statToEnum as $key => $value) {
+        foreach ($this->config->get('horizon-stats-reporter.stat_names', []) as $key => $value) {
             if ($value === $statEnum) {
                 return (string) value($key, $statEnum);
             }
