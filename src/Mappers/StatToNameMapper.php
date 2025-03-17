@@ -12,7 +12,7 @@ class StatToNameMapper
      * @param  array<string, StatEnum|\Closure>  $statToEnum
      */
     public function __construct(
-        #[Config('horizon-stats-reporter.stat_name')]
+        #[Config('horizon-stats-reporter.stat_names')]
         protected array $statToEnum
     ) {
     }
