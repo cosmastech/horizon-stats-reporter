@@ -5,9 +5,9 @@ namespace Cosmastech\HorizonStatsReporter;
 enum StatEnum: string
 {
     case JOB_FAILED = 'job_failed';
-    case QUEUE_WAIT = 'queue:wait';
-    case QUEUE_PROCESSES = 'queue:processes';
-    case QUEUE_JOBS = 'queue:jobs';
+    case QUEUE_WAIT = 'queue_wait';
+    case QUEUE_PROCESSES = 'queue_processes';
+    case QUEUE_JOBS = 'queue_jobs';
 
     public static function waitForQueue(string $queueName): string
     {
