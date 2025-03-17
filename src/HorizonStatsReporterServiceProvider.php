@@ -28,6 +28,7 @@ class HorizonStatsReporterServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->mergeConfigFrom(__DIR__.'/../config/horizon-stats-reporter.php', 'horizon-stats-reporter');
         $this->publishes([
             __DIR__.'/../config/horizon-stats-reporter.php' => config_path('horizon-stats-reporter.php'),
         ], 'horizon-stats-reporter');
