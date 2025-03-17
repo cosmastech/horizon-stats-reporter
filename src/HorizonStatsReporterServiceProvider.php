@@ -14,7 +14,7 @@ class HorizonStatsReporterServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->offerPublishing();
-        $this->assertValidConfig();
+        //$this->assertValidConfig();
 
         Event::listen(
             JobFailed::class,
