@@ -2,6 +2,7 @@
 
 namespace Cosmastech\HorizonStatsReporter;
 
+use Cosmastech\HorizonStatsReporter\ConsoleCommands\ReportHorizonStatsCommand;
 use Cosmastech\HorizonStatsReporter\Exceptions\InvalidConfigurationException;
 use Cosmastech\HorizonStatsReporter\Listeners\HorizonJobFailedListener;
 use Cosmastech\HorizonStatsReporter\Listeners\HorizonSupervisorOutOfMemoryListener;
@@ -21,7 +22,11 @@ class HorizonStatsReporterServiceProvider extends ServiceProvider
             'horizon-stats-reporter'
         );
 
-        $this->offerPublishing();
+        if ($this->app->runningInConsole()) {
+            $this->offerPublishing();
+            $this->commands(ReportHorizonStatsCommand::class);
+        }
+
         //$this->assertValidConfig();
 
         Event::listen(
@@ -42,10 +47,6 @@ class HorizonStatsReporterServiceProvider extends ServiceProvider
 
     protected function offerPublishing(): void
     {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
         $this->publishes([
             __DIR__.'/../config/horizon-stats-reporter.php' => config_path('horizon-stats-reporter.php'),
         ], 'horizon-stats-reporter');
