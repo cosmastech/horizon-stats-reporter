@@ -8,5 +8,6 @@ return [
         'queue_jobs' => StatEnum::QUEUE_JOBS->value,
         'queue_processes' => StatEnum::QUEUE_PROCESSES->value,
         'queue_wait' => StatEnum::QUEUE_WAIT->value,
+        'supervisor_oom' => StatEnum::SUPERVISOR_OUT_OF_MEMORY->value,
     ],
 ];
